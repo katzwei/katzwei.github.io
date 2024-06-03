@@ -1,0 +1,36 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+#game-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#game-board {
+    display: grid;
+    gap: 1px;
+    border: 1px dashed darkgrey;
+}
+
+.tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1px;
+    box-sizing: border-box;
+    background-color: whitesmoke;
+}
+
+.player-tile {
+    background-image: url("../asset/cat2.png");
+    background-size: cover;
+}
