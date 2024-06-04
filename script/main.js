@@ -15,14 +15,13 @@ class Block extends Tile {
 
 class Player extends Block {
     constructor(position) {
-        super(position, "player-tile");
+        super(position, Math.random() > 0.1 ? "player-tile" : "dragon-tile");
     }
 }
 
 class Board {
-    constructor(boardSize, tileSize, ...tiles) {
+    constructor(boardSize, ...tiles) {
         this.boardSize = boardSize;
-        this.tileSize = tileSize;
         this.tiles = tiles;
     }
     get(position) {
@@ -39,8 +38,6 @@ class Board {
         this.tileElemethis.tiles.forEach(t => {
             const dom = document.createElement("div");
             dom.classList.add("tile");
-            dom.style.width = `${this.tileSize}px`;
-            dom.style.height = `${this.tileSize}px`;
             t.element = dom;
             this.draw(t);
             return dom;
@@ -104,8 +101,6 @@ class Game {
         this.boardElements = this.board.tiles.map(_ => {
             const element = document.createElement("div");
             element.classList.add("tile");
-            element.style.width = `${this.board.tileSize}px`;
-            element.style.height = `${this.board.tileSize}px`;
             return element;
         });
         return this.boardElements;
@@ -144,14 +139,25 @@ class Game {
 }
 
 (() => {
+    const gameElement = document.querySelector("#game-container");
     const boardElement = document.querySelector("#game-board");
     const boardSize = 10;
-    const tileSize = 2 * Math.trunc((boardElement.getBoundingClientRect().height / boardSize) * 0.5); // round to the lowest even integer
-    boardElement.style.gridTemplateColumns = `repeat(${boardSize}, minmax(0, ${tileSize}px))`;
-    let tiles = [...Array(boardSize ** 2)].map(_ => new Tile());
+    const tilesCount = boardSize ** 2;
+    const getGameBounds = () => {
+        const style = getComputedStyle(gameElement);
+        return ({
+            height: gameElement.clientHeight - parseInt(style.paddingTop) - parseInt(style.paddingBottom),
+            width: gameElement.clientWidth - parseInt(style.paddingLeft) - parseInt(style.paddingRight)
+        });
+    };
+    const getTileSize = () => {
+        const gameBounds = getGameBounds();
+        return 2 * Math.trunc(((gameBounds.width > gameBounds.height ? gameBounds.height : gameBounds.width) / boardSize) * 0.5); // round to the lowest even integer
+    }
+    const tiles = [...Array(tilesCount)].map(_ => new Tile());
     const game = new Game(
         boardElement,
-        new Board(boardSize, tileSize, ...tiles),
+        new Board(boardSize, ...tiles),
         new Player(33),
         new Block(12, "toe"),
         new Block(41, "mah"),
@@ -162,5 +168,8 @@ class Game {
         new Block(38, "."),
         new Block(53, "com")
     );
+    const computeBoardConstraints = _ => boardElement.style.gridTemplateColumns = `repeat(${boardSize}, minmax(0, ${getTileSize()}px))`;
+    computeBoardConstraints();
+    addEventListener("resize", computeBoardConstraints);
     game.start();
 })();

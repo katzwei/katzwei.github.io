@@ -19,6 +19,8 @@ body {
     display: grid;
     gap: 1px;
     border: 1px dashed darkgrey;
+    /* flex: 1; */
+    height: min-content;
 }
 
 .tile {
@@ -28,9 +30,15 @@ body {
     padding: 1px;
     box-sizing: border-box;
     background-color: whitesmoke;
+    aspect-ratio: 1;
 }
 
 .player-tile {
     background-image: url("../asset/cat2.png");
+    background-size: cover;
+}
+
+.dragon-tile {
+    background-image: url("../asset/dragon.png");
     background-size: cover;
 }
