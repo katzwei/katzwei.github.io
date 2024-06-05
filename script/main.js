@@ -68,6 +68,25 @@ class Game {
             }[key];
             callback?.();
         }).bind(this));
+        if (navigator.maxTouchPoints) {
+            addEventListener("touchstart", (({ touches }) => {
+                this.touchStart = {
+                    x: touches[0].clientX,
+                    y: touches[0].clientY,
+                };
+            }).bind(this));
+            addEventListener("touchmove", (({ touches }) => {
+                this.touchDiff = {
+                    x: this.touchStart.x - touches[0].clientX,
+                    y: this.touchStart.y - touches[0].clientY
+                };
+            }).bind(this));
+            addEventListener("touchend", (_ => {
+                if (Math.abs(this.touchDiff.x) > Math.abs(this.touchDiff.y)) this.move(this.player, this.touchDiff.x > 0 ? -1 : 1);
+                else this.move(this.player, this.board.boardSize * (this.touchDiff.y > 0 ? -1 : 1));
+                this.touchDiff = { x: 0, y: 0 };
+            }).bind(this));
+        }
     }
     #tryPosition(originPosition, targetPosition) {
         const distance = Math.abs(targetPosition - originPosition);
