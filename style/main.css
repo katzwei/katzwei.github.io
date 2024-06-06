@@ -42,3 +42,12 @@ body {
     background-image: url("../asset/dragon.png");
     background-size: cover;
 }
+
+.success {
+    background-color: lightgreen;
+    aspect-ratio: unset;
+}
+
+.success>a {
+    color: #fffafa;
+}
